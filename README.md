@@ -1,235 +1,197 @@
 # Vectorless RAG System
 
-A FastAPI-based Vectorless RAG app with a clean chat UI.
+A production-grade **Vectorless Retrieval-Augmented Generation (RAG) chatbot** built with **FastAPI, Groq, and PageIndex**, designed to deliver **grounded, document-aware responses without relying on traditional vector databases**.
 
-This system lets you:
-- Upload a PDF to PageIndex
-- Wait for indexing to complete
-- Ask questions against the indexed document
-- Get grounded answers from Groq model output
-- View reasoning and retrieved node IDs from the UI menu
+This system implements a **tree-structured retrieval workflow** where the LLM first identifies the most relevant document nodes using structural summaries, then generates a final answer grounded in the retrieved content.
 
-## 1. Tech Stack
+---
 
-- Backend: FastAPI
-- LLM: Groq 
-- Document index/retrieval: PageIndex
-- Frontend: HTML + CSS + JavaScript
+## Key Highlights
 
+* Built a **vectorless document retrieval pipeline**
+* Eliminated dependency on **FAISS / Pinecone / Chroma**
+* Implemented **two-stage LLM reasoning and answer generation**
+* Designed a **clean interactive chat UI**
+* Supports **PDF upload, indexing, status tracking, and Q&A**
+* Exposes **reasoning traces and retrieved node IDs**
+* Built using **production-ready FastAPI architecture**
 
-## 2. Project Structure
+---
+
+## Tech Stack
+
+* **Backend:** FastAPI
+* **LLM:** Groq
+* **Document Retrieval:** PageIndex
+* **Frontend:** HTML, CSS, JavaScript
+* **Templating:** Jinja2
+* **Environment Management:** python-dotenv
+
+---
+
+## Project Structure
 
 ```text
-Vectorless RAG/
-├── page_index.py            # FastAPI app (API + UI route)
+Vectorless-RAG/
+├── page_index.py
 ├── templates/
-│   └── index.html           # Main UI
+│   └── index.html
 ├── static/
-│   ├── style.css            # UI styling
-│   └── app.js               # UI behavior
-├── env.example              # Required env variables
-├── .env                     # Your local secrets (create this)
+│   ├── style.css
+│   └── app.js
+├── .env.example
+├── .gitignore
 └── README.md
 ```
 
-## 3. Prerequisites
+---
 
-- Python 3.10+
-- PageIndex API key
-- Groq API key
+## Core Capabilities
 
-## 4. Environment Variables
+### Document Upload & Indexing
 
-Create a `.env` file in the project root.
+* Upload PDF documents
+* Submit documents to PageIndex
+* Track processing status
+* Validate readiness before querying
 
-Use `env.example` as reference:
+### Intelligent Retrieval Pipeline
 
-```env
-PAGEINDEX_API_KEY=
-GROQ_API_KEY=
+* Fetch document tree summaries
+* Perform structure-aware node selection
+* Retrieve relevant node content
+* Generate grounded final answers
+
+### Explainable Responses
+
+Each response includes:
+
+* **Final answer**
+* **LLM reasoning trace**
+* **retrieved node IDs**
+
+This improves transparency and debugging during evaluation.
+
+---
+
+## Architecture
+
+```text
+User Query
+    ↓
+FastAPI API Layer
+    ↓
+PageIndex Tree Retrieval
+    ↓
+LLM-based Relevant Node Selection
+    ↓
+Context Construction from Selected Nodes
+    ↓
+Groq Final Answer Generation
+    ↓
+Grounded Response to UI
 ```
 
-Optional variable:
+---
 
-```env
-GROQ_MODEL=llama-3.3-70b-versatile
+## Retrieval Workflow
+
+### Stage 1 — Structural Retrieval
+
+The system retrieves the **document tree and node summaries** from PageIndex.
+
+Instead of embeddings, the LLM analyzes:
+
+* node summaries
+* hierarchical structure
+* section relevance
+
+to identify the most relevant nodes.
+
+### Stage 2 — Grounded Answer Generation
+
+Selected node content is assembled into a context window and passed to the LLM for final answer generation.
+
+This ensures:
+
+* reduced hallucination
+* document-grounded responses
+* explainable retrieval flow
+
+---
+
+## API Endpoints
+
+### `POST /api/documents/upload`
+
+Uploads a PDF and initiates indexing.
+
+### `GET /api/documents/{doc_id}/status`
+
+Checks whether indexing is complete.
+
+### `POST /api/query`
+
+Processes user query against indexed document.
+
+---
+
+## Sample Query Response
+
+```json
+{
+  "doc_id": "pi-xxxxxxxx",
+  "query": "Summarize the key policies",
+  "thinking": "Selected relevant compliance sections",
+  "node_list": ["node_2", "node_5"],
+  "answer": "The key policies include..."
+}
 ```
 
-If `GROQ_MODEL` is not set, default is `llama-3.3-70b-versatile`.
+---
 
-## 5. Installation
+## Why This Project Stands Out
 
-### Windows (PowerShell)
+Traditional RAG systems rely heavily on vector databases and embeddings.
 
-```powershell
-cd "E:\AI_Agent\Vectorless RAG"
-python -m venv env
-.\env\Scripts\Activate.ps1
-pip install --upgrade pip
-pip install fastapi uvicorn python-dotenv groq pageindex python-multipart jinja2
-```
+This project demonstrates an alternative **vectorless retrieval architecture** that leverages:
 
-### macOS/Linux
+* document hierarchy
+* structural summaries
+* LLM reasoning
+
+This reduces infrastructure complexity while preserving relevance.
+
+---
+
+## Production Enhancements
+
+* streaming response support
+* persistent session storage
+* retry and backoff logic
+* logging and observability
+* rate limiting and auth
+* HTTPS reverse proxy deployment
+
+---
+
+## Security Best Practices
+
+* secrets stored in `.env`
+* `.env` excluded from Git
+* API key rotation supported
+* safe production deployment ready
+
+---
+
+## Run Locally
 
 ```bash
-cd /path/to/Vectorless\ RAG
-python3 -m venv env
-source env/bin/activate
-pip install --upgrade pip
-pip install fastapi uvicorn python-dotenv groq pageindex python-multipart jinja2
-```
-
-## 6. Run the App
-
-From project root:
-
-```powershell
 uvicorn page_index:app --reload
 ```
 
-Open in browser:
+Open:
 
 ```text
 http://127.0.0.1:8000
 ```
-
-## 7. How to Use
-
-1. Open the app.
-2. Click top-right `...`.
-3. Choose `Documents`.
-4. Confirm current `doc_id` or upload a new PDF.
-5. Click `Refresh Status` until the document is `Ready`.
-6. Ask questions in the chat input.
-7. Click top-right `...` -> `Result` to inspect:
-   - Reasoning
-   - Node list
-
-## 8. API Endpoints
-
-### `GET /`
-Serves the chat UI.
-
-### `POST /api/documents/upload`
-Uploads a PDF and submits it to PageIndex.
-
-Response example:
-
-```json
-{
-  "doc_id": "pi-xxxxxxxxxxxxxxxx",
-  "message": "Document submitted"
-}
-```
-
-### `GET /api/documents/{doc_id}/status`
-Checks document indexing status.
-
-Response example:
-
-```json
-{
-  "doc_id": "pi-xxxxxxxxxxxxxxxx",
-  "ready": true
-}
-```
-
-### `POST /api/query`
-Queries an indexed document.
-
-Request body:
-
-```json
-{
-  "doc_id": "pi-xxxxxxxxxxxxxxxx",
-  "query": "What are the key policies?",
-  "model": "llama-3.3-70b-versatile",
-  "temperature": 0
-}
-```
-
-Response example:
-
-```json
-{
-  "doc_id": "pi-xxxxxxxxxxxxxxxx",
-  "query": "What are the key policies?",
-  "thinking": "...",
-  "node_list": ["node_1", "node_4"],
-  "answer": "..."
-}
-```
-
-## 9. System Architecture
-
-```mermaid
-flowchart TD
-    U[User Browser UI] -->|Upload PDF| B1[/POST /api/documents/upload/]
-    U -->|Check status| B2[/GET /api/documents/{doc_id}/status/]
-    U -->|Ask question| B3[/POST /api/query/]
-
-    B1 --> PI[PageIndex API]
-    B2 --> PI
-    B3 --> PI
-
-    PI -->|Tree + Node Summaries| B3
-    B3 -->|Search Prompt| G[Groq LLM]
-    G -->|JSON with node_list + thinking| B3
-    B3 -->|Answer Prompt with selected node text| G
-    G -->|Final grounded answer| B3
-
-    B3 --> U
-```
-
-### Query Processing Pipeline
-
-1. Validate `doc_id` is ready via PageIndex.
-2. Fetch document tree with summaries.
-3. Remove full text from tree for search-stage prompt.
-4. Ask Groq to select relevant node IDs.
-5. Build context from selected node texts.
-6. Ask Groq for final answer based on context.
-7. Return answer + reasoning + node list to UI.
-
-## 10. Common Errors and Fixes
-
-### Missing env keys
-Error:
-- `Missing PAGEINDEX_API_KEY in environment`
-- `Missing GROQ_API_KEY in environment`
-
-Fix:
-- Add both keys in `.env`
-- Restart server
-
-### `500` on `/`
-Fix:
-- Ensure `templates/index.html` exists
-- Ensure dependencies installed (`jinja2`, `fastapi`, `uvicorn`)
-
-### Upload fails
-Fix:
-- Upload only `.pdf`
-- Check API key validity
-- Check internet access
-
-### Query returns processing conflict
-Error:
-- `Document is still processing`
-
-Fix:
-- Wait and call status endpoint until `ready=true`
-
-## 11. Security Notes
-
-- Do not commit `.env` to git.
-- Rotate keys if accidentally exposed.
-- In production, add auth/rate limiting before public exposure.
-
-## 12. Production Suggestions
-
-- Add request logging and tracing
-- Add retry/backoff for external API calls
-- Add streaming responses for better UX
-- Add persistent storage for document sessions
-- Deploy with reverse proxy (Nginx/Caddy) and HTTPS
