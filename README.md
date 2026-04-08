@@ -76,21 +76,24 @@ This improves transparency and debugging during evaluation.
 
 ## Architecture
 
-```text
-User Query
-    ↓
-FastAPI API Layer
-    ↓
-PageIndex Tree Retrieval
-    ↓
-LLM-based Relevant Node Selection
-    ↓
-Context Construction from Selected Nodes
-    ↓
-Groq Final Answer Generation
-    ↓
-Grounded Response to UI
+```mermaid
+flowchart TD
+    U[User / Chat UI] --> A[FastAPI API Layer]
+    A --> B[PageIndex: Tree + Node Summaries]
+    B --> C[Stage 1: LLM Node Selection]
+    C --> D[Context Builder from Selected Nodes]
+    D --> E[Stage 2: Groq Final Answer Generation]
+    E --> F[Grounded Response to UI]
 ```
+
+**Flow Summary**
+
+* Request enters through FastAPI
+* PageIndex provides structured document tree data
+* LLM selects relevant nodes (retrieval stage)
+* System builds contextual evidence from selected nodes
+* LLM generates final grounded answer (generation stage)
+* UI receives answer with explainability fields
 
 ---
 
@@ -150,17 +153,19 @@ Processes user query against indexed document.
 
 ---
 
-## Why This Project Stands Out
+## Why This Stack?
 
-Traditional RAG systems rely heavily on vector databases and embeddings.
+Traditional RAG systems rely heavily on vector databases and embedding infrastructure.
 
-This project demonstrates an alternative **vectorless retrieval architecture** that leverages:
+This stack is chosen to keep the system simple, explainable, and production-ready:
 
-* document hierarchy
-* structural summaries
-* LLM reasoning
+* **FastAPI** for clean API design, async performance, and easy deployment
+* **PageIndex** for structure-aware retrieval without external vector DB setup
+* **Groq** for fast LLM inference in both retrieval and answer stages
+* **Jinja2 + Vanilla JS UI** for lightweight frontend with low operational overhead
+* **python-dotenv** for straightforward environment-based configuration
 
-This reduces infrastructure complexity while preserving relevance.
+This combination reduces infrastructure complexity while preserving response quality and traceability.
 
 ---
 
