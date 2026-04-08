@@ -7,51 +7,50 @@
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-  <button id="leftMenuBtn" class="dot-btn left" aria-label="Open document menu">...</button>
-  <button id="rightMenuBtn" class="dot-btn right" aria-label="Open details menu">...</button>
+  <button id="menuBtn" class="dot-btn right" aria-label="Open menu">...</button>
+  <div id="menuPopover" class="menu-popover" aria-hidden="true">
+    <button id="menuDocuments" class="menu-item">Documents</button>
+    <button id="menuResult" class="menu-item">Result</button>
+  </div>
 
-  <aside id="leftPanel" class="side-panel left-panel">
+  <aside id="infoPanel" class="side-panel right-panel">
     <div class="panel-head">
-      <h2>Document</h2>
-      <button id="closeLeftPanel" class="close-btn" aria-label="Close panel">x</button>
+      <h2 id="panelTitle">Documents</h2>
+      <button id="closePanel" class="close-btn" aria-label="Close panel">x</button>
     </div>
     <div class="panel-body">
-      <p class="panel-label">Current document ID</p>
-      <div id="docInfo" class="mono-block"></div>
+      <section id="documentsSection">
+        <p class="panel-label">Current document ID</p>
+        <div id="docInfo" class="mono-block"></div>
 
-      <p class="panel-label">Document status</p>
-      <div id="statusInfo" class="mono-block">Unknown</div>
+        <p class="panel-label">Document status</p>
+        <div id="statusInfo" class="mono-block">Unknown</div>
 
-      <button id="statusBtn" class="secondary">Refresh Status</button>
+        <button id="statusBtn" class="secondary">Refresh Status</button>
 
-      <hr />
+        <hr />
 
-      <p class="panel-label">Load new document</p>
-      <input id="pdfFile" type="file" accept="application/pdf" />
-      <button id="uploadBtn">Upload New PDF</button>
+        <p class="panel-label">Load new document</p>
+        <input id="pdfFile" type="file" accept="application/pdf" />
+        <button id="uploadBtn">Upload New PDF</button>
 
-      <label for="modelInput" class="panel-label">Model</label>
-      <input id="modelInput" type="text" value="llama-3.3-70b-versatile" />
-    </div>
-  </aside>
+        <label for="modelInput" class="panel-label">Model</label>
+        <input id="modelInput" type="text" value="llama-3.3-70b-versatile" />
+      </section>
 
-  <aside id="rightPanel" class="side-panel right-panel">
-    <div class="panel-head">
-      <h2>Details</h2>
-      <button id="closeRightPanel" class="close-btn" aria-label="Close panel">x</button>
-    </div>
-    <div class="panel-body">
-      <p class="panel-label">Reasoning</p>
-      <pre id="thinkingBox" class="detail-box"></pre>
+      <section id="resultSection" class="hidden-section">
+        <p class="panel-label">Reasoning</p>
+        <pre id="thinkingBox" class="detail-box"></pre>
 
-      <p class="panel-label">Node List</p>
-      <pre id="nodesBox" class="detail-box"></pre>
+        <p class="panel-label">Node List</p>
+        <pre id="nodesBox" class="detail-box"></pre>
+      </section>
     </div>
   </aside>
 
   <main class="chat-shell">
     <header class="chat-header">
-      <h1>ChatWise RAG</h1>
+      <h1>Vectorless RAG</h1>
       <p>Ask questions on your loaded document.</p>
     </header>
 

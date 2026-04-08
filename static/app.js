@@ -1,10 +1,13 @@
-const leftMenuBtn = document.getElementById("leftMenuBtn");
-const rightMenuBtn = document.getElementById("rightMenuBtn");
-const closeLeftPanel = document.getElementById("closeLeftPanel");
-const closeRightPanel = document.getElementById("closeRightPanel");
+const menuBtn = document.getElementById("menuBtn");
+const menuPopover = document.getElementById("menuPopover");
+const menuDocuments = document.getElementById("menuDocuments");
+const menuResult = document.getElementById("menuResult");
 
-const leftPanel = document.getElementById("leftPanel");
-const rightPanel = document.getElementById("rightPanel");
+const infoPanel = document.getElementById("infoPanel");
+const closePanel = document.getElementById("closePanel");
+const panelTitle = document.getElementById("panelTitle");
+const documentsSection = document.getElementById("documentsSection");
+const resultSection = document.getElementById("resultSection");
 
 const pdfFile = document.getElementById("pdfFile");
 const uploadBtn = document.getElementById("uploadBtn");
@@ -26,6 +29,19 @@ let currentReady = false;
 function togglePanel(panel, forceOpen) {
   const shouldOpen = typeof forceOpen === "boolean" ? forceOpen : !panel.classList.contains("open");
   panel.classList.toggle("open", shouldOpen);
+}
+
+function toggleMenu(forceOpen) {
+  const shouldOpen = typeof forceOpen === "boolean" ? forceOpen : !menuPopover.classList.contains("open");
+  menuPopover.classList.toggle("open", shouldOpen);
+}
+
+function showPanelSection(sectionName) {
+  const showDocuments = sectionName === "documents";
+  documentsSection.classList.toggle("hidden-section", !showDocuments);
+  resultSection.classList.toggle("hidden-section", showDocuments);
+  panelTitle.textContent = showDocuments ? "Documents" : "Result";
+  togglePanel(infoPanel, true);
 }
 
 function appendMessage(role, text) {
@@ -164,10 +180,23 @@ async function askQuestion() {
   }
 }
 
-leftMenuBtn.addEventListener("click", () => togglePanel(leftPanel));
-rightMenuBtn.addEventListener("click", () => togglePanel(rightPanel));
-closeLeftPanel.addEventListener("click", () => togglePanel(leftPanel, false));
-closeRightPanel.addEventListener("click", () => togglePanel(rightPanel, false));
+menuBtn.addEventListener("click", () => toggleMenu());
+menuDocuments.addEventListener("click", () => {
+  toggleMenu(false);
+  showPanelSection("documents");
+});
+menuResult.addEventListener("click", () => {
+  toggleMenu(false);
+  showPanelSection("result");
+});
+closePanel.addEventListener("click", () => togglePanel(infoPanel, false));
+
+document.addEventListener("click", (event) => {
+  const insideMenu = menuPopover.contains(event.target) || menuBtn.contains(event.target);
+  if (!insideMenu) {
+    toggleMenu(false);
+  }
+});
 
 uploadBtn.addEventListener("click", uploadDocument);
 statusBtn.addEventListener("click", () => checkStatus(true));
