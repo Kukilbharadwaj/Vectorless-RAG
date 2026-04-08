@@ -29,6 +29,23 @@ This system implements a **tree-structured retrieval workflow** where the LLM fi
 
 ---
 
+## API Key Setup
+
+Create your API keys from the official dashboards:
+
+* **PageIndex API Key:** https://dash.pageindex.ai/api-keys
+* **Groq API Key:** https://console.groq.com/keys
+* **PageIndex Docs (Getting Started):** https://docs.pageindex.ai/getting-started
+
+Add both keys in your `.env` file:
+
+```env
+PAGEINDEX_API_KEY=your_pageindex_key_here
+GROQ_API_KEY=your_groq_key_here
+```
+
+---
+
 ## Project Structure
 
 ```text
