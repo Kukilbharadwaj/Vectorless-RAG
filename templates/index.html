@@ -7,36 +7,59 @@
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-  <main class="container">
-    <h1>Vectorless RAG</h1>
-    <p class="subtitle">Upload PDF, wait for indexing, then ask questions.</p>
+  <button id="leftMenuBtn" class="dot-btn left" aria-label="Open document menu">...</button>
+  <button id="rightMenuBtn" class="dot-btn right" aria-label="Open details menu">...</button>
 
-    <section class="card">
-      <h2>1) Upload Document</h2>
+  <aside id="leftPanel" class="side-panel left-panel">
+    <div class="panel-head">
+      <h2>Document</h2>
+      <button id="closeLeftPanel" class="close-btn" aria-label="Close panel">x</button>
+    </div>
+    <div class="panel-body">
+      <p class="panel-label">Current document ID</p>
+      <div id="docInfo" class="mono-block"></div>
+
+      <p class="panel-label">Document status</p>
+      <div id="statusInfo" class="mono-block">Unknown</div>
+
+      <button id="statusBtn" class="secondary">Refresh Status</button>
+
+      <hr />
+
+      <p class="panel-label">Load new document</p>
       <input id="pdfFile" type="file" accept="application/pdf" />
-      <button id="uploadBtn">Upload</button>
-      <p id="docInfo"></p>
-      <button id="statusBtn" disabled>Check Status</button>
-      <p id="statusInfo"></p>
-    </section>
+      <button id="uploadBtn">Upload New PDF</button>
 
-    <section class="card">
-      <h2>2) Ask Question</h2>
-      <label for="queryInput">Query</label>
-      <textarea id="queryInput" rows="4" placeholder="Ask anything about your document"></textarea>
-      <label for="modelInput">Model</label>
+      <label for="modelInput" class="panel-label">Model</label>
       <input id="modelInput" type="text" value="llama-3.3-70b-versatile" />
-      <button id="askBtn" disabled>Ask</button>
-    </section>
+    </div>
+  </aside>
 
-    <section class="card">
-      <h2>Result</h2>
-      <h3>Answer</h3>
-      <pre id="answerBox"></pre>
-      <h3>Reasoning</h3>
-      <pre id="thinkingBox"></pre>
-      <h3>Node List</h3>
-      <pre id="nodesBox"></pre>
+  <aside id="rightPanel" class="side-panel right-panel">
+    <div class="panel-head">
+      <h2>Details</h2>
+      <button id="closeRightPanel" class="close-btn" aria-label="Close panel">x</button>
+    </div>
+    <div class="panel-body">
+      <p class="panel-label">Reasoning</p>
+      <pre id="thinkingBox" class="detail-box"></pre>
+
+      <p class="panel-label">Node List</p>
+      <pre id="nodesBox" class="detail-box"></pre>
+    </div>
+  </aside>
+
+  <main class="chat-shell">
+    <header class="chat-header">
+      <h1>ChatWise RAG</h1>
+      <p>Ask questions on your loaded document.</p>
+    </header>
+
+    <section id="chatMessages" class="chat-messages"></section>
+
+    <section class="chat-input-wrap">
+      <textarea id="queryInput" rows="2" placeholder="Ask your document anything..."></textarea>
+      <button id="askBtn">Send</button>
     </section>
   </main>
 
