@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vectorless RAG</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>Vectorless RAG</h1>
+    <p class="subtitle">Upload PDF, wait for indexing, then ask questions.</p>
+
+    <section class="card">
+      <h2>1) Upload Document</h2>
+      <input id="pdfFile" type="file" accept="application/pdf" />
+      <button id="uploadBtn">Upload</button>
+      <p id="docInfo"></p>
+      <button id="statusBtn" disabled>Check Status</button>
+      <p id="statusInfo"></p>
+    </section>
+
+    <section class="card">
+      <h2>2) Ask Question</h2>
+      <label for="queryInput">Query</label>
+      <textarea id="queryInput" rows="4" placeholder="Ask anything about your document"></textarea>
+      <label for="modelInput">Model</label>
+      <input id="modelInput" type="text" value="llama-3.3-70b-versatile" />
+      <button id="askBtn" disabled>Ask</button>
+    </section>
+
+    <section class="card">
+      <h2>Result</h2>
+      <h3>Answer</h3>
+      <pre id="answerBox"></pre>
+      <h3>Reasoning</h3>
+      <pre id="thinkingBox"></pre>
+      <h3>Node List</h3>
+      <pre id="nodesBox"></pre>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

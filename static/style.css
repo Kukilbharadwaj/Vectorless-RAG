@@ -1,0 +1,76 @@
+:root {
+  --bg: #f8f4e8;
+  --surface: #fffdf8;
+  --ink: #202020;
+  --accent: #1c7c54;
+  --muted: #6a6a6a;
+  --border: #d8d1bf;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--ink);
+  background: radial-gradient(circle at top right, #efe5cd 0%, var(--bg) 40%, #f4efe2 100%);
+}
+
+.container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem 2rem;
+}
+
+h1 {
+  margin-bottom: 0.3rem;
+}
+
+.subtitle {
+  color: var(--muted);
+  margin-top: 0;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-top: 1rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+}
+
+button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.55rem 1rem;
+  margin-top: 0.6rem;
+  cursor: pointer;
+}
+
+button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input,
+textarea {
+  width: 100%;
+  margin-top: 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.6rem;
+  background: #fff;
+}
+
+pre {
+  background: #f4f0e4;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.8rem;
+  white-space: pre-wrap;
+}
